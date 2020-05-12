@@ -1,5 +1,6 @@
 terraform_tfvar_old
 blockstg_tf
+keys.tfvars
 
 # Local .terraform directories
 **/.terraform/*
