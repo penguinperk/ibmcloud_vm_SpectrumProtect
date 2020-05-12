@@ -53,6 +53,7 @@ resource "ibm_is_subnet" "subnet1" {
   vpc                      = ibm_is_vpc.vpc.id
   zone                     = local.ZONE
   total_ipv4_address_count = 256
+  public_gateway           = ibm_is_public_gateway.testacc_gateway.id
 }
 
 data "ibm_is_image" "RHEL76" {
@@ -72,9 +73,15 @@ resource "ibm_is_instance" "vsi1" {
   profile = local.IAM_PROFILE
 
   primary_network_interface {
+    name            = "primarynetwork"
     subnet          = ibm_is_subnet.subnet1.id
     security_groups = [ibm_is_security_group.sg1.id]
   }
+
+  boot_volume {
+  name = "vsi1-boot"
+  }
+  volumes = [ibm_is_volume.container.id, ibm_is_volume.db.id]
 }
 
 resource "ibm_is_floating_ip" "fip1" {
@@ -82,7 +89,11 @@ resource "ibm_is_floating_ip" "fip1" {
   target = ibm_is_instance.vsi1.primary_network_interface[0].id
 }
 
+resource "ibm_is_public_gateway" "testacc_gateway" {
+    name = "testgateway"
+    vpc = ibm_is_vpc.vpc.id
+    zone = "us-south-1"
+}
 output "sshcommand" {
     value = "ssh root@ibm_is_floating_ip.fip1.address"
 }
-
