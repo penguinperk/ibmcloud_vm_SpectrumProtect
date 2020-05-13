@@ -11,18 +11,6 @@ resource "ibm_is_vpc" "vpc" {
   name = "${local.BASENAME}-vpc"
 }
 
-#For VPC
-#resource "ibm_is_public_gateway" "testaccgateway" {
-#    name = "gateway"
-#    vpc = ibm_is_vpc.vpc.id
-#    zone = "local.ZONE"
-##
-#    //User can configure timeouts
-#    timeouts {
-#        create = "90m"
-#    }
-#}
-
 resource "ibm_is_security_group" "sg1" {
   name = "${local.BASENAME}-sg1"
   vpc  = ibm_is_vpc.vpc.id
@@ -93,7 +81,4 @@ resource "ibm_is_public_gateway" "testacc_gateway" {
     name = "testgateway"
     vpc = ibm_is_vpc.vpc.id
     zone = "us-south-1"
-}
-output "sshcommand" {
-    value = "ssh root@ibm_is_floating_ip.fip1.address"
 }
