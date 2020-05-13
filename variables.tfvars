@@ -1,1 +1,3 @@
-iam_profile  = "cc1-2x4"
+#variables "iam_profile" {
+#type = string
+#default  = "cc1-2x4"
