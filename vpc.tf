@@ -1,18 +1,20 @@
 variable "ssh_key" {
 }
+variable "BASENAME" {
+}
 
 locals {
-  BASENAME    = "scott"
+  #  BASENAME    = "scott"
   ZONE        = "us-south-1"
   IAM_PROFILE = "cx2-2x4"
 }
 
 resource "ibm_is_vpc" "vpc" {
-  name = "${local.BASENAME}-vpc"
+  name = "${var.BASENAME}-vpc"
 }
 
 resource "ibm_is_security_group" "sg1" {
-  name = "${local.BASENAME}-sg1"
+  name = "${var.BASENAME}-sg1"
   vpc  = ibm_is_vpc.vpc.id
 }
 
@@ -37,7 +39,7 @@ resource "ibm_is_security_group_rule" "engress" {
 
 
 resource "ibm_is_subnet" "subnet1" {
-  name                     = "${local.BASENAME}-subnet1"
+  name                     = "${var.BASENAME}-subnet1"
   vpc                      = ibm_is_vpc.vpc.id
   zone                     = local.ZONE
   total_ipv4_address_count = 256
@@ -53,7 +55,7 @@ data "ibm_is_ssh_key" "ssh_key_id" {
 }
 
 resource "ibm_is_instance" "vsi1" {
-  name    = "${local.BASENAME}-vsi1"
+  name    = "${var.BASENAME}-vsi1"
   vpc     = ibm_is_vpc.vpc.id
   zone    = local.ZONE
   keys    = [data.ibm_is_ssh_key.ssh_key_id.id]
@@ -73,7 +75,7 @@ resource "ibm_is_instance" "vsi1" {
 }
 
 resource "ibm_is_floating_ip" "fip1" {
-  name   = "${local.BASENAME}-fip1"
+  name   = "${var.BASENAME}-fip1"
   target = ibm_is_instance.vsi1.primary_network_interface[0].id
 }
 
