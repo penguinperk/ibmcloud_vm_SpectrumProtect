@@ -2,9 +2,9 @@ variable "ssh_key" {
 }
 
 locals {
-  BASENAME = "scott"
-  ZONE     = "us-south-1"
-  IAM_PROFILE = "cc1-2x4"
+  BASENAME    = "scott"
+  ZONE        = "us-south-1"
+  IAM_PROFILE = "cx2-2x4"
 }
 
 resource "ibm_is_vpc" "vpc" {
@@ -67,7 +67,7 @@ resource "ibm_is_instance" "vsi1" {
   }
 
   boot_volume {
-  name = "vsi1-boot"
+    name = "vsi1-boot"
   }
   volumes = [ibm_is_volume.container.id, ibm_is_volume.db.id]
 }
@@ -78,7 +78,7 @@ resource "ibm_is_floating_ip" "fip1" {
 }
 
 resource "ibm_is_public_gateway" "testacc_gateway" {
-    name = "testgateway"
-    vpc = ibm_is_vpc.vpc.id
-    zone = "us-south-1"
+  name = "testgateway"
+  vpc  = ibm_is_vpc.vpc.id
+  zone = "us-south-1"
 }
