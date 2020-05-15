@@ -1,12 +1,12 @@
-variable "ssh_key" {
-}
-variable "BASENAME" {
-}
+variable "ssh_key" {}
+variable "BASENAME" {}
+variable "ZONE" {}
+variable "IAM_PROFILE" {}
 
 locals {
   #  BASENAME    = "scott"
-  ZONE        = "us-south-1"
-  IAM_PROFILE = "cx2-2x4"
+  #  ZONE        = "us-south-1"
+  # IAM_PROFILE = "cx2-2x4"
 }
 
 resource "ibm_is_vpc" "vpc" {
@@ -41,7 +41,7 @@ resource "ibm_is_security_group_rule" "engress" {
 resource "ibm_is_subnet" "subnet1" {
   name                     = "${var.BASENAME}-subnet1"
   vpc                      = ibm_is_vpc.vpc.id
-  zone                     = local.ZONE
+  zone                     = var.ZONE
   total_ipv4_address_count = 256
   public_gateway           = ibm_is_public_gateway.testacc_gateway.id
 }
@@ -57,10 +57,10 @@ data "ibm_is_ssh_key" "ssh_key_id" {
 resource "ibm_is_instance" "vsi1" {
   name    = "${var.BASENAME}-vsi1"
   vpc     = ibm_is_vpc.vpc.id
-  zone    = local.ZONE
+  zone    = var.ZONE
   keys    = [data.ibm_is_ssh_key.ssh_key_id.id]
   image   = data.ibm_is_image.RHEL76.id
-  profile = local.IAM_PROFILE
+  profile = var.IAM_PROFILE
 
   primary_network_interface {
     name            = "primarynetwork"
