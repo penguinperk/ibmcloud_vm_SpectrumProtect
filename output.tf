@@ -4,5 +4,5 @@ output "sshcommand" {
 }
 output "vpnpublicip" {
   value       = ibm_is_vpn_gateway.vpngateway.public_ip_address
-  description = "VPN's External IP:wq"
+  description = "VPN's External IP"
 }
