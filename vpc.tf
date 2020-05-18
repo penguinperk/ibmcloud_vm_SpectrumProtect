@@ -1,7 +1,20 @@
-variable "ssh_key" {}
-variable "BASENAME" {}
-variable "ZONE" {}
-variable "IAM_PROFILE" {}
+variable "ssh_key" {
+  default = "gen2"
+}
+variable "BASENAME" {
+  default = "scott"
+}
+variable "ZONE" {
+  default = "us-south-1"
+}
+variable "IAM_PROFILE" {
+  default = "cx2-2x4"
+}
+
+
+
+
+
 
 locals {
   #  BASENAME    = "scott"
