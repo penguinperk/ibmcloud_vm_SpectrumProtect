@@ -1,20 +1,3 @@
-variable "ssh_key" {
-  default = "gen2"
-}
-variable "BASENAME" {
-  default = "scott"
-}
-variable "ZONE" {
-  default = "us-south-1"
-}
-variable "IAM_PROFILE" {
-  default = "cx2-2x4"
-}
-
-
-
-
-
 
 locals {
   #  BASENAME    = "scott"
@@ -42,6 +25,17 @@ resource "ibm_is_security_group_rule" "ingress_ssh_all" {
     port_max = 22
   }
 }
+# allow all incoming network traffic on port 22
+resource "ibm_is_security_group_rule" "ingress_rdp_all" {
+  group     = ibm_is_security_group.sg1.id
+  direction = "inbound"
+  remote    = "98.222.12.23"
+
+  tcp {
+    port_min = 3389
+    port_max = 3389
+  }
+}
 
 # allow all out network traffic
 resource "ibm_is_security_group_rule" "engress" {
@@ -59,32 +53,8 @@ resource "ibm_is_subnet" "subnet1" {
   public_gateway           = ibm_is_public_gateway.testacc_gateway.id
 }
 
-data "ibm_is_image" "RHEL76" {
-  name = "ibm-redhat-7-6-minimal-amd64-1"
-}
-
 data "ibm_is_ssh_key" "ssh_key_id" {
   name = var.ssh_key
-}
-
-resource "ibm_is_instance" "vsi1" {
-  name    = "${var.BASENAME}-vsi1"
-  vpc     = ibm_is_vpc.vpc.id
-  zone    = var.ZONE
-  keys    = [data.ibm_is_ssh_key.ssh_key_id.id]
-  image   = data.ibm_is_image.RHEL76.id
-  profile = var.IAM_PROFILE
-
-  primary_network_interface {
-    name            = "primarynetwork"
-    subnet          = ibm_is_subnet.subnet1.id
-    security_groups = [ibm_is_security_group.sg1.id]
-  }
-
-  boot_volume {
-    name = "vsi1-boot"
-  }
-  volumes = [ibm_is_volume.container.id, ibm_is_volume.db.id]
 }
 
 resource "ibm_is_floating_ip" "fip1" {
