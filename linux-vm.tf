@@ -21,3 +21,24 @@ resource "ibm_is_instance" "vsi1" {
   }
   volumes = [ibm_is_volume.container.id, ibm_is_volume.db.id]
 }
+resource "ibm_is_floating_ip" "fip1" {
+  name   = "${var.BASENAME}-fip1"
+  target = ibm_is_instance.vsi1.primary_network_interface[0].id
+}
+output "sshcommand" {
+  value       = ibm_is_floating_ip.fip1.address
+  description = "External Floating IP"
+}
+resource "ibm_is_volume" "container" {
+  name     = "${var.BASENAME}-container"
+  profile  = "general-purpose"
+  zone     = "us-south-1"
+  capacity = 800
+}
+
+resource "ibm_is_volume" "db" {
+  name     = "${var.BASENAME}-db"
+  profile  = "5iops-tier"
+  zone     = "us-south-1"
+  capacity = 400
+}

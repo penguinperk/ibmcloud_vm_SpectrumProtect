@@ -53,17 +53,24 @@ resource "ibm_is_subnet" "subnet1" {
   public_gateway           = ibm_is_public_gateway.testacc_gateway.id
 }
 
-data "ibm_is_ssh_key" "ssh_key_id" {
-  name = var.ssh_key
-}
-
-resource "ibm_is_floating_ip" "fip1" {
-  name   = "${var.BASENAME}-fip1"
-  target = ibm_is_instance.vsi1.primary_network_interface[0].id
-}
-
 resource "ibm_is_public_gateway" "testacc_gateway" {
-  name = "testgateway"
+  name = "public-gateway"
   vpc  = ibm_is_vpc.vpc.id
   zone = "us-south-1"
+}
+
+#resource "ibm_is_ssh_key" "ssh_key_id" {
+#  name       = "gen2"
+#  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDjTp/4LYLHYbvj2/aTh3p+6S0pjvHUbZLuKBFL5BPVr9Gsux1E6xTLjsZ8Y9/QO4Vst02myr7NU+qZxOcFs84qU0bXXHRlvLDzZLxEyV+GUVwfm0qMhl9mUIMPfJKkGKZP8cHEGibOLwhpOFjaunRBKbLjO0NKSNo07aUhMqxpSQ/YIeQGJvzsOXHDrHoNMFVe8jBKMw8HVWX0OwfysJ5IgF6n5aOxL1b6Am1wp6gc4+0sPXFA6+p67CSWjW/UY7KsSWfVhtD6X9lMDnFNRmgjRJqdgMdo/H3N4qefRYkfbvuy6QLHNof2Ap+ctvpAVabLguCOI3b6Rj65zu8prroz perkins@HW09361.local"
+#
+#  tags = [ 
+#  "customer = dot foods",
+#  "environment = trial",
+#  "project = spectrum protect",
+#  "automated = terraform",
+#  "owner = scott perkins"
+#  ]
+#}
+data "ibm_is_ssh_key" "ssh_key_id" {
+  name = var.ssh_key
 }

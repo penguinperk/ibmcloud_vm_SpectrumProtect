@@ -19,3 +19,7 @@ resource "ibm_is_vpn_gateway_connection" "VPNGatewayConnection" {
   peer_cidrs     = ["192.168.11.0/24"]
   admin_state_up = "true"
 }
+output "vpnpublicip" {
+  value       = ibm_is_vpn_gateway.vpngateway.public_ip_address
+  description = "VPN's External IP"
+}
