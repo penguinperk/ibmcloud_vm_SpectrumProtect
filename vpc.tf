@@ -46,12 +46,27 @@ resource "ibm_is_security_group_rule" "engress" {
 
 
 resource "ibm_is_subnet" "subnet1" {
-  name = "${var.BASENAME}-subnet1"
-  vpc  = ibm_is_vpc.vpc.id
-  zone = var.ZONE
-  #  total_ipv4_address_count = 256
+  name                     = "${var.BASENAME}-subnet1"
+  vpc                      = ibm_is_vpc.vpc.id
+  zone                     = var.ZONE
+  public_gateway           = ibm_is_public_gateway.testacc_gateway.id
+  total_ipv4_address_count = 256
+  #ipv4_cidr_block = var.ipv4_subnet
+}
+
+resource "ibm_is_subnet" "my-subnet1" {
+  name            = "${var.BASENAME}-mysubnet1"
+  vpc             = ibm_is_vpc.vpc.id
+  zone            = var.ZONE
   public_gateway  = ibm_is_public_gateway.testacc_gateway.id
-  ipv4_cidr_block = var.ipv4_subnet
+  ipv4_cidr_block = "10.80.0.0/24"
+}
+
+resource "ibm_is_vpc_address_prefix" "myvpc_address_prefix" {
+  name = "mysubnetprefix"
+  zone = var.ZONE
+  vpc  = ibm_is_vpc.vpc.id
+  cidr = "10.80.0.0/24"
 }
 
 resource "ibm_is_public_gateway" "testacc_gateway" {
